@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Valentine</title>
+<style>
+* { box-sizing: border-box; font-family: 'Comic Sans MS', 'Poppins', cursive; }
+body {
+  margin: 0;
+  overflow: hidden;
+  background: radial-gradient(circle at top, #ffe6f0, #ffcce0);
+}
+
+/* Floating sobbing emojis */
+.emoji {
+  position: fixed;
+  bottom: -60px;
+  font-size: clamp(24px, 5vw, 42px);
+  opacity: 0.8;
+  animation: floatUp linear infinite;
+  pointer-events: none;
+}
+@keyframes floatUp {
+  from { transform: translateY(0) rotate(0deg); opacity: 0.2; }
+  to { transform: translateY(-120vh) rotate(360deg); opacity: 1; }
+}
+
+/* Main content */
+.container {
+  position: relative;
+  z-index: 5;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 20px;
+}
+
+.card {
+  background: rgba(255,255,255,0.85);
+  padding: clamp(20px, 5vw, 40px);
+  border-radius: 24px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+  max-width: 700px;
+  width: 100%;
+}
+
+h1 {
+  font-size: clamp(22px, 5vw, 42px);
+  font-weight: 900;
+  margin-bottom: 25px;
+}
+
+.buttons {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+button {
+  border: none;
+  padding: 14px 28px;
+  border-radius: 14px;
+  font-size: clamp(16px, 4vw, 22px);
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+#yesBtn { background: #ff5c8a; color: white; transform: scale(1); }
+#noBtn { background: #666; color: white; position: relative; }
+
+#result {
+  margin-top: 25px;
+  font-size: clamp(24px, 6vw, 44px);
+  font-weight: 900;
+  display: none;
+}
+
+/* Graffiti mode */
+.graffiti {
+  position: fixed;
+  font-size: clamp(20px, 6vw, 46px);
+  opacity: 0.9;
+  pointer-events: none;
+  animation: pop 0.8s ease forwards;
+}
+
+@keyframes pop {
+  from { transform: scale(0) rotate(-20deg); opacity: 0; }
+  to { transform: scale(1) rotate(10deg); opacity: 1; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="card">
+    <h1>hlo ji, will you be my valentine?</h1>
+    <div class="buttons">
+      <button id="yesBtn">YES</button>
+      <button id="noBtn">NO</button>
+    </div>
+    <div id="result">hm :3</div>
+  </div>
+</div>
+
+<script>
+// Generate floating sobbing emojis
+for (let i = 0; i < 35; i++) {
+  const e = document.createElement('div');
+  e.className = 'emoji';
+  e.innerText = '🥺';
+  e.style.left = Math.random() * 100 + 'vw';
+  e.style.animationDuration = 6 + Math.random() * 8 + 's';
+  e.style.animationDelay = Math.random() * 6 + 's';
+  document.body.appendChild(e);
+}
+
+const noBtn = document.getElementById('noBtn');
+const yesBtn = document.getElementById('yesBtn');
+const result = document.getElementById('result');
+
+let yesScale = 1;
+
+// Move NO button away (mouse + touch)
+function evade() {
+  const maxX = window.innerWidth - noBtn.offsetWidth - 20;
+  const maxY = window.innerHeight - noBtn.offsetHeight - 20;
+  const x = Math.random() * maxX;
+  const y = Math.random() * maxY;
+  noBtn.style.position = 'fixed';
+  noBtn.style.left = x + 'px';
+  noBtn.style.top = y + 'px';
+
+  // Make YES bigger each time NO tries to escape
+  yesScale += 0.08;
+  yesBtn.style.transform = `scale(${yesScale})`;
+}
+
+noBtn.addEventListener('mouseenter', evade);
+noBtn.addEventListener('touchstart', evade);
+noBtn.addEventListener('click', (e) => e.preventDefault());
+
+// YES click behavior
+yesBtn.addEventListener('click', () => {
+  result.style.display = 'block';
+  spawnGraffiti();
+});
+
+// Cute graffiti everywhere
+function spawnGraffiti() {
+  const emojis = ['💖','💗','💘','✨','🖍️','🎨','💞','🌸','⭐','🩷'];
+  for (let i = 0; i < 80; i++) {
+    const g = document.createElement('div');
+    g.className = 'graffiti';
+    g.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+    g.style.left = Math.random() * 100 + 'vw';
+    g.style.top = Math.random() * 100 + 'vh';
+    document.body.appendChild(g);
+  }
+}
+</script>
+
+</body>
+</html>
