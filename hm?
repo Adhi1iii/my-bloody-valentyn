@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Valentine?</title>
+
+<style>
+body {
+  margin: 0;
+  overflow: hidden;
+  background: linear-gradient(135deg, #ffb6c1, #ffc0cb);
+  font-family: Comic Sans MS, cursive;
+  text-align: center;
+}
+
+/* Floating sobbing emojis */
+.emoji {
+  position: fixed;
+  font-size: 24px;
+  animation: float 10s linear infinite;
+  opacity: 0.6;
+}
+
+@keyframes float {
+  from { transform: translateY(100vh); }
+  to { transform: translateY(-10vh); }
+}
+
+/* Main content */
+.container {
+  position: relative;
+  z-index: 10;
+  top: 20vh;
+}
+
+h1 {
+  font-size: clamp(28px, 6vw, 48px);
+  font-weight: bold;
+  color: #8b0033;
+}
+
+/* Buttons */
+.buttons {
+  margin-top: 30px;
+}
+
+button {
+  font-size: 20px;
+  padding: 12px 25px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+#yesBtn {
+  background: hotpink;
+  color: white;
+  font-weight: bold;
+}
+
+#noBtn {
+  background: gray;
+  color: white;
+  position: absolute;
+}
+
+/* YES result */
+.result {
+  display: none;
+  font-size: clamp(36px, 7vw, 60px);
+  font-weight: bold;
+  color: #ff0066;
+}
+
+/* Graffiti */
+.graffiti {
+  position: fixed;
+  font-size: 26px;
+  opacity: 0.8;
+}
+
+/* Sparkles */
+.sparkle {
+  position: fixed;
+  font-size: 18px;
+  pointer-events: none;
+  animation: fade 0.8s forwards;
+}
+
+@keyframes fade {
+  to {
+    opacity: 0;
+    transform: scale(1.8);
+  }
+}
+
+/* Heart explosion */
+.heart {
+  position: fixed;
+  font-size: 24px;
+  animation: pop 1.5s ease forwards;
+}
+
+@keyframes pop {
+  0% { transform: scale(0.5); opacity: 1; }
+  100% { transform: translateY(-150px) scale(1.8); opacity: 0; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h1 id="question">hlo ji, will you be my valentine?</h1>
+
+  <div class="buttons" id="buttons">
+    <button id="yesBtn">YES</button>
+    <button id="noBtn">NO</button>
+  </div>
+
+  <div class="result" id="result">hm :3</div>
+</div>
+
+<script>
+// Crying sound effect
+const crySound = new Audio("https://cdn.pixabay.com/audio/2022/03/15/audio_57c7a52df5.mp3");
+
+// Floating sobbing emojis
+for (let i = 0; i < 35; i++) {
+  let emoji = document.createElement("div");
+  emoji.className = "emoji";
+  emoji.innerText = "🥺";
+  emoji.style.left = Math.random() * 100 + "vw";
+  emoji.style.animationDuration = (6 + Math.random() * 6) + "s";
+  document.body.appendChild(emoji);
+}
+
+// NO button dodge logic
+const noBtn = document.getElementById("noBtn");
+const yesBtn = document.getElementById("yesBtn");
+
+function moveNo() {
+  crySound.currentTime = 0;
+  crySound.play();
+
+  let x = Math.random() * (window.innerWidth - 120);
+  let y = Math.random() * (window.innerHeight - 80);
+  noBtn.style.left = x + "px";
+  noBtn.style.top = y + "px";
+
+  // YES grows
+  let currentSize = parseFloat(window.getComputedStyle(yesBtn).fontSize);
+  yesBtn.style.fontSize = currentSize + 3 + "px";
+}
+
+noBtn.addEventListener("mouseenter", moveNo);
+noBtn.addEventListener("touchstart", moveNo);
+noBtn.addEventListener("click", e => e.preventDefault());
+
+// YES click = hearts + graffiti
+yesBtn.addEventListener("click", () => {
+  document.getElementById("buttons").style.display = "none";
+  document.getElementById("question").style.display = "none";
+  document.getElementById("result").style.display = "block";
+
+  // Heart explosion
+  for (let i = 0; i < 40; i++) {
+    let heart = document.createElement("div");
+    heart.className = "heart";
+    heart.innerText = "💖";
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.top = "70vh";
+    document.body.appendChild(heart);
+  }
+
+  // Cute graffiti
+  for (let i = 0; i < 60; i++) {
+    let g = document.createElement("div");
+    g.className = "graffiti";
+    let emojis = ["💖", "😼", "❤️", "✨", "🫶🏻", "😖", "🌹"];
+    g.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+    g.style.left = Math.random() * 100 + "vw";
+    g.style.top = Math.random() * 100 + "vh";
+    document.body.appendChild(g);
+  }
+});
+
+// Sparkle trail cursor / touch
+document.addEventListener("mousemove", spark);
+document.addEventListener("touchmove", (e) => {
+  spark(e.touches[0]);
+});
+
+function spark(e) {
+  let s = document.createElement("div");
+  s.className = "sparkle";
+  let sparkles = ["✨", "💫", "⭐"];
+  s.innerText = sparkles[Math.floor(Math.random() * sparkles.length)];
+  s.style.left = e.clientX + "px";
+  s.style.top = e.clientY + "px";
+  document.body.appendChild(s);
+
+  setTimeout(() => s.remove(), 800);
+}
+</script>
+
+</body>
+</html>
