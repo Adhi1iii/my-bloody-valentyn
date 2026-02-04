@@ -1,168 +1,148 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Valentine</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Valentine?</title>
+
 <style>
-* { box-sizing: border-box; font-family: 'Comic Sans MS', 'Poppins', cursive; }
 body {
   margin: 0;
   overflow: hidden;
-  background: radial-gradient(circle at top, #ffe6f0, #ffcce0);
+  background: linear-gradient(135deg, #ffb6c1, #ffc0cb);
+  font-family: Comic Sans MS, cursive;
+  text-align: center;
 }
 
 /* Floating sobbing emojis */
 .emoji {
   position: fixed;
-  bottom: -60px;
-  font-size: clamp(24px, 5vw, 42px);
-  opacity: 0.8;
-  animation: floatUp linear infinite;
-  pointer-events: none;
+  font-size: 24px;
+  animation: float 10s linear infinite;
+  opacity: 0.6;
 }
-@keyframes floatUp {
-  from { transform: translateY(0) rotate(0deg); opacity: 0.2; }
-  to { transform: translateY(-120vh) rotate(360deg); opacity: 1; }
+
+@keyframes float {
+  from { transform: translateY(100vh); }
+  to { transform: translateY(-10vh); }
 }
 
 /* Main content */
 .container {
   position: relative;
-  z-index: 5;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 20px;
-}
-
-.card {
-  background: rgba(255,255,255,0.85);
-  padding: clamp(20px, 5vw, 40px);
-  border-radius: 24px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-  max-width: 700px;
-  width: 100%;
+  z-index: 10;
+  top: 20vh;
 }
 
 h1 {
-  font-size: clamp(22px, 5vw, 42px);
-  font-weight: 900;
-  margin-bottom: 25px;
+  font-size: clamp(28px, 6vw, 48px);
+  font-weight: bold;
+  color: #8b0033;
 }
 
+/* Buttons */
 .buttons {
-  display: flex;
-  justify-content: center;
-  gap: 18px;
-  flex-wrap: wrap;
+  margin-top: 30px;
 }
 
 button {
+  font-size: 20px;
+  padding: 12px 25px;
   border: none;
-  padding: 14px 28px;
-  border-radius: 14px;
-  font-size: clamp(16px, 4vw, 22px);
-  font-weight: 800;
+  border-radius: 12px;
   cursor: pointer;
-  transition: transform 0.2s ease, background 0.2s ease;
+  transition: 0.2s ease;
 }
 
-#yesBtn { background: #ff5c8a; color: white; transform: scale(1); }
-#noBtn { background: #666; color: white; position: relative; }
+#yesBtn {
+  background: hotpink;
+  color: white;
+  font-weight: bold;
+}
 
-#result {
-  margin-top: 25px;
-  font-size: clamp(24px, 6vw, 44px);
-  font-weight: 900;
+#noBtn {
+  background: gray;
+  color: white;
+  position: absolute;
+}
+
+/* YES result */
+.result {
   display: none;
+  font-size: clamp(36px, 7vw, 60px);
+  font-weight: bold;
+  color: #ff0066;
 }
 
-/* Graffiti mode */
+/* Graffiti hearts */
 .graffiti {
   position: fixed;
-  font-size: clamp(20px, 6vw, 46px);
-  opacity: 0.9;
-  pointer-events: none;
-  animation: pop 0.8s ease forwards;
-}
-
-@keyframes pop {
-  from { transform: scale(0) rotate(-20deg); opacity: 0; }
-  to { transform: scale(1) rotate(10deg); opacity: 1; }
+  font-size: 26px;
+  opacity: 0.8;
 }
 </style>
 </head>
+
 <body>
 
 <div class="container">
-  <div class="card">
-    <h1>hlo ji, will you be my valentine?</h1>
-    <div class="buttons">
-      <button id="yesBtn">YES</button>
-      <button id="noBtn">NO</button>
-    </div>
-    <div id="result">hm :3</div>
+  <h1 id="question">hlo ji, will you be my valentine?🥺☝🏻</h1>
+
+  <div class="buttons" id="buttons">
+    <button id="yesBtn">YES</button>
+    <button id="noBtn">NO</button>
   </div>
+
+  <div class="result" id="result">hm :3 (must've been the wind)</div>
 </div>
 
 <script>
-// Generate floating sobbing emojis
+// Create floating sobbing emojis
 for (let i = 0; i < 35; i++) {
-  const e = document.createElement('div');
-  e.className = 'emoji';
-  e.innerText = '🥺';
-  e.style.left = Math.random() * 100 + 'vw';
-  e.style.animationDuration = 6 + Math.random() * 8 + 's';
-  e.style.animationDelay = Math.random() * 6 + 's';
-  document.body.appendChild(e);
+  let emoji = document.createElement("div");
+  emoji.className = "emoji";
+  emoji.innerText = "🥺";
+  emoji.style.left = Math.random() * 100 + "vw";
+  emoji.style.animationDuration = (6 + Math.random() * 6) + "s";
+  document.body.appendChild(emoji);
 }
 
-const noBtn = document.getElementById('noBtn');
-const yesBtn = document.getElementById('yesBtn');
-const result = document.getElementById('result');
+// NO button runs away
+const noBtn = document.getElementById("noBtn");
+const yesBtn = document.getElementById("yesBtn");
 
-let yesScale = 1;
+function moveNo() {
+  let x = Math.random() * (window.innerWidth - 120);
+  let y = Math.random() * (window.innerHeight - 80);
+  noBtn.style.left = x + "px";
+  noBtn.style.top = y + "px";
 
-// Move NO button away (mouse + touch)
-function evade() {
-  const maxX = window.innerWidth - noBtn.offsetWidth - 20;
-  const maxY = window.innerHeight - noBtn.offsetHeight - 20;
-  const x = Math.random() * maxX;
-  const y = Math.random() * maxY;
-  noBtn.style.position = 'fixed';
-  noBtn.style.left = x + 'px';
-  noBtn.style.top = y + 'px';
-
-  // Make YES bigger each time NO tries to escape
-  yesScale += 0.08;
-  yesBtn.style.transform = `scale(${yesScale})`;
+  // YES grows each time NO is dodged
+  let currentSize = parseFloat(window.getComputedStyle(yesBtn).fontSize);
+  yesBtn.style.fontSize = currentSize + 3 + "px";
 }
 
-noBtn.addEventListener('mouseenter', evade);
-noBtn.addEventListener('touchstart', evade);
-noBtn.addEventListener('click', (e) => e.preventDefault());
+noBtn.addEventListener("mouseenter", moveNo);
+noBtn.addEventListener("touchstart", moveNo);
+noBtn.addEventListener("click", (e) => e.preventDefault());
 
-// YES click behavior
-yesBtn.addEventListener('click', () => {
-  result.style.display = 'block';
-  spawnGraffiti();
-});
+// YES click event
+yesBtn.addEventListener("click", () => {
+  document.getElementById("buttons").style.display = "none";
+  document.getElementById("question").style.display = "none";
+  document.getElementById("result").style.display = "block";
 
-// Cute graffiti everywhere
-function spawnGraffiti() {
-  const emojis = ['💖','💗','💘','✨','🖍️','🎨','💞','🌸','⭐','🩷'];
-  for (let i = 0; i < 80; i++) {
-    const g = document.createElement('div');
-    g.className = 'graffiti';
+  // Cute graffiti everywhere
+  for (let i = 0; i < 50; i++) {
+    let g = document.createElement("div");
+    g.className = "graffiti";
+    let emojis = ["🫶🏻", "😖", "❤️", "✨", "😼", "😘"];
     g.innerText = emojis[Math.floor(Math.random() * emojis.length)];
-    g.style.left = Math.random() * 100 + 'vw';
-    g.style.top = Math.random() * 100 + 'vh';
+    g.style.left = Math.random() * 100 + "vw";
+    g.style.top = Math.random() * 100 + "vh";
     document.body.appendChild(g);
   }
-}
+});
 </script>
 
 </body>
